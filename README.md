@@ -91,11 +91,12 @@ official grpc-go peers and public HTTP/2 framing suites on x86_64 and arm64.
 | Typed zig-protobuf unary and streaming | Supported |
 | Metadata, deadlines, gzip, GOAWAY, drain | Supported |
 | Native Zig TLS 1.2+, ALPN `h2`, explicit PEM credentials | Optional |
+| Client certificates for mTLS (native Zig TLS) | Optional |
 | Transpiled-C release bundle TLS | Out of scope |
 | grpcpp-shaped synchronous common API | Selected subset |
 | Official Protobuf C++ runtime | Optional external typed-code dependency |
 | General Abseil compatibility | Out of scope |
-| IPv6, mTLS, retries, reflection, xDS | Out of scope |
+| IPv6, [mTLS]server-side client certificate verification, retries, reflection, xDS | Out of scope |
 
 See [the official interoperability profile](tests/official/README.md) for current cases
 and results. grpc-lite does not provide grpc-core ABI compatibility or the full grpcpp

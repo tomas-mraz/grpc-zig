@@ -192,6 +192,21 @@ var channel = try grpc.Channel.init(allocator, "api.example.com:443", .{
 });
 ```
 
+For mutual TLS, a client presents a certificate chain and unencrypted PEM private key
+when the server requests one. The key must match the leaf certificate, otherwise
+`Channel.init` fails with `error.CertificateKeyMismatch`. PEM input is parsed during
+`Channel.init` and may be released afterward.
+
+```zig
+var channel = try grpc.Channel.init(allocator, "api.example.com:443", .{
+    .runtime = &runtime,
+    .tls = .{
+        .ca_certificates_pem = ca_pem,
+        .identity = .{ .certificate_chain_pem = client_cert_pem, .private_key_pem = client_key_pem },
+    },
+});
+```
+
 Servers accept a PEM certificate chain and unencrypted PEM private key. PEM input is
 parsed during `Server.init` and may be released afterward.
 

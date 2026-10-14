@@ -86,7 +86,8 @@ case "$library" in
             RelWithDebInfo) make_cflags=(-O2 -g) ;;
             *) make_cflags=(-O2) ;;
         esac
-        mbedtls_config_dir=$(dirname "$mbedtls_config_header")
+        # make -C changes directory, so a relative path (e.g. from `zig build --fork=../x`) must be resolved first.
+        mbedtls_config_dir=$(cd "$(dirname "$mbedtls_config_header")" && pwd)
         make -C "$source_copy/library" -j "$(getconf _NPROCESSORS_ONLN)" \
             -o error.c \
             -o version_features.c \

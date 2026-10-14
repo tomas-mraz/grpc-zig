@@ -66,7 +66,15 @@ threadlocal var receiving_http2_impl: ?*Impl = null;
 
 pub const TlsOptions = struct {
     ca_certificates_pem: []const u8,
+    /// Client certificate for mutual TLS, presented when the server requests one.
+    identity: ?TlsIdentity = null,
     handshake_timeout_ns: u64 = 10 * std.time.ns_per_s,
+};
+
+/// PEM certificate chain and unencrypted PEM private key; parsed during `Channel.init`.
+pub const TlsIdentity = struct {
+    certificate_chain_pem: []const u8,
+    private_key_pem: []const u8,
 };
 
 pub const ReconnectOptions = struct {
@@ -243,6 +251,10 @@ pub const Channel = struct {
                 impl.tls_config = try tls_record.Config.createClient(
                     impl.allocator,
                     tls_options.ca_certificates_pem,
+                    if (tls_options.identity) |identity| .{
+                        .certificate_chain_pem = identity.certificate_chain_pem,
+                        .private_key_pem = identity.private_key_pem,
+                    } else null,
                 );
             }
         }
